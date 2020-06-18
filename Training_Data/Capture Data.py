@@ -7,15 +7,13 @@
 
 import time
 import datetime
-import matplotlib.dates as mdates
-from collections import deque
 import numpy as np
 import os
 import pandas as pd
 import serial
 import re
 
-PORT = "COM43"
+PORT = "COM8"
 
 # How many sensor samples we want to store
 HISTORY_SIZE = 2500
@@ -24,12 +22,13 @@ HISTORY_SIZE = 2500
 INTERVAL = 0.01
 
 serialport = None
+serialport = serial.Serial(PORT, 115200, timeout=0.05)
 
 def get_imu_data():
     global serialport
     if not serialport:
         # open serial port
-        serialport = serial.Serial(PORT, 115200, timeout=0.1)
+        serialport = serial.Serial(PORT, 115200, timeout=0.05)
         # check which port was really used
         print("Opened", serialport.name)
         # Flush input
@@ -54,15 +53,15 @@ def get_imu_data():
     #print(vals)
     return vals
 
-for _ in range(20):
+while serialport.in_waiting:
     print(get_imu_data())
 
-filename = input("Name the folder where data will be stored: ")
-if not os.path.exists(filename):
-  os.mkdir(filename + '/')
-starting_index = int(input("What number should we start on? "))
+#filename = input("Name the folder where data will be stored: ")
+#if not os.path.exists(filename):
+#  os.mkdir(filename + '/')
+#starting_index = int(input("What number should we start on? "))
 
-file_name = filename + "/" + filename + '{0:03d}'.format(i) + ".csv"
-  df = pd.DataFrame(data, columns = header)
-  df.to_csv(file_name, header=True)
-  i += 1
+#file_name = filename + "/" + filename + '{0:03d}'.format(i) + ".csv"
+#  df = pd.DataFrame(data, columns = header)
+#  df.to_csv(file_name, header=True)
+#  i += 1
