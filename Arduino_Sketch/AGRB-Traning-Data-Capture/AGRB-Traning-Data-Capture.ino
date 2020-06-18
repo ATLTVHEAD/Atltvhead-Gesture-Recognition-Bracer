@@ -1,3 +1,13 @@
+/* AGRB-Training-Data-Capture.ino
+
+Description: Upon button press, send 2 seconds of data reads over serial. It will be recieved by Capture Data.py
+
+Written by Nate Damen  
+Created: June 17,2020
+Updated: June 17,2020
+
+*/
+
 //#include <WiFi.h>
 //#include <IRCClient.h>
 #include <Math.h>
@@ -92,8 +102,6 @@ void loop() {
     Serial.print(startTime);
     Serial.print(',');
     Serial.print(currTime);
-    Serial.print(',');
-    Serial.print(currTime-startTime);
     Serial.print(',');
     
     /* Display the results (acceleration is measured in m/s^2) */
