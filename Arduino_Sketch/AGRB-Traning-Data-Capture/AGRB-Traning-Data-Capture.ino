@@ -89,20 +89,21 @@ void loop() {
   sensors_event_t gyro;
   sensors_event_t temp;
   sox.getEvent(&accel, &gyro, &temp);
-  id++;
+  //id++;
   currTime = millis();
   if(bpress){
     startTime = currTime;
     bpress = false;
-    id = 0;
+    //id = 0;
+    //Serial.print("start");
   }
-  if(currTime-startTime <= 2000){
-    Serial.print(id);
+  if(currTime-startTime <= 3000){
+    //Serial.print(id);
+    //Serial.print(',');
+    Serial.print(currTime - startTime);
     Serial.print(',');
-    Serial.print(startTime);
-    Serial.print(',');
-    Serial.print(currTime);
-    Serial.print(',');
+    //Serial.print(currTime);
+    //Serial.print(',');
     
     /* Display the results (acceleration is measured in m/s^2) */
     Serial.print(accel.acceleration.x,3);

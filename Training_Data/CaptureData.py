@@ -1,18 +1,18 @@
-# Capture Data.py
+# CaptureData.py
 # Description: Recieved Data from ESP32 Micro via the AGRB-Training-Data-Capture.ino file. Save data stream as csv files
 # Written by: Nate Damen
 # Created on June 17th 2020
-# Updated on 
-
+# Updated on June 18th 2020
 
 import time
 import datetime
-import numpy as np
 import os
+import numpy as np
 import pandas as pd
 import serial
 import re
 
+# PORT = "/dev/ttyUSB0"
 PORT = "COM8"
 
 # How many sensor samples we want to store
@@ -40,28 +40,48 @@ def get_imu_data():
     if not line:
         return None
     #print(line)
-    if not "Uni:" in line:
-        return None
+    #if not "Uni:" in line:
+        #return None
     vals = line.replace("Uni:", "").strip().split(',')
     #print(vals)
-    if len(vals) != 9:
+    if len(vals) != 7:
         return None
     try:
         vals = [float(i) for i in vals]
     except ValueError:
-        return None
+        return ValueError
     #print(vals)
     return vals
 
-while serialport.in_waiting:
-    print(get_imu_data())
 
-#filename = input("Name the folder where data will be stored: ")
-#if not os.path.exists(filename):
-#  os.mkdir(filename + '/')
-#starting_index = int(input("What number should we start on? "))
+j=0
 
-#file_name = filename + "/" + filename + '{0:03d}'.format(i) + ".csv"
-#  df = pd.DataFrame(data, columns = header)
-#  df.to_csv(file_name, header=True)
-#  i += 1
+filename = input("\Type the Folder and Filename: ")
+if not os.path.exists(filename):
+  os.mkdir(filename + '/')
+
+header = ["deltaTime","Acc_X","Acc_Y","Acc_Z","Gyro_X","Gyro_Y","Gyro_Z"]
+
+def saveData():
+    global j
+    file_name = filename + "/" + filename + '{0:03d}'.format(j) + ".csv"
+    df = pd.DataFrame(data, columns = header)
+    #df['deltaTime']=df.apply(lambda row: row.currentTime - row.startTime ,axis=1)
+    df.to_csv(file_name, index=False)
+    j += 1
+    
+
+data = []
+dataholder=[]
+dataCollecting = False
+while(1):
+    #serialport.flush()
+    dataholder = get_imu_data()
+    if dataholder != None:
+        dataCollecting=True
+        #print(dataholder[0])
+        data.append(dataholder)
+    if dataholder == None and dataCollecting == True:
+        saveData()
+        data = []
+        dataCollecting = False
