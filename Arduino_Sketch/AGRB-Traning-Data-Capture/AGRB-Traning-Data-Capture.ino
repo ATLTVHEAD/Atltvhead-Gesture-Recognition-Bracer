@@ -87,57 +87,30 @@ void loop() {
     id = 0;
   }
   if(currTime-startTime <= 2000){
-
-    // see below for csv data transfer example
-    Serial.print("\t\tTemperature ");
-    Serial.print(temp.temperature);
-    Serial.println(" deg C");
-
+    Serial.print(id);
+    Serial.print(',');
+    Serial.print(startTime);
+    Serial.print(',');
+    Serial.print(currTime);
+    Serial.print(',');
+    Serial.print(currTime-startTime);
+    Serial.print(',');
+    
     /* Display the results (acceleration is measured in m/s^2) */
-    Serial.print("\t\tAccel X: ");
-    Serial.print(accel.acceleration.x);
-    Serial.print(" \tY: ");
-    Serial.print(accel.acceleration.y);
-    Serial.print(" \tZ: ");
-    Serial.print(accel.acceleration.z);
-    Serial.println(" m/s^2 ");
+    Serial.print(accel.acceleration.x,3);
+    Serial.print(',');
+    Serial.print(accel.acceleration.y,3);
+    Serial.print(',');
+    Serial.print(accel.acceleration.z,3);
+    Serial.print(',');
 
     /* Display the results (rotation is measured in rad/s) */
-    Serial.print("\t\tGyro X: ");
-    Serial.print(gyro.gyro.x - gyrocal[0]);
-    Serial.print(" \tY: ");
-    Serial.print(gyro.gyro.y - gyrocal[1]);
-    Serial.print(" \tZ: ");
-    Serial.print(gyro.gyro.z - gyrocal[2]);
-    Serial.println(" radians/s ");
-  
-    Serial.print("\t\tStart Time: ");
-    Serial.print(startTime);
-    Serial.print(" \tCurrent Time: ");
-    Serial.print(currTime);
-    Serial.print(" \tDelta Time: ");
-    Serial.print(currTime-startTime);
-    Serial.println(" milliseconds");
-    
-    Serial.print("\t\tDataID: ");
-    Serial.print(id);
-    Serial.println(" count of data");
+    Serial.print(gyro.gyro.x - gyrocal[0],3);
+    Serial.print(',');
+    Serial.print(gyro.gyro.y - gyrocal[1],3);
+    Serial.print(',');
+    Serial.print(gyro.gyro.z - gyrocal[2],3);
     Serial.println(); 
-
-    /* print the data in CSV format
-      Serial.print(aX, 3);
-      Serial.print(',');
-      Serial.print(aY, 3);
-      Serial.print(',');
-      Serial.print(aZ, 3);
-      Serial.print(',');
-      Serial.print(gX, 3);
-      Serial.print(',');
-      Serial.print(gY, 3);
-      Serial.print(',');
-      Serial.print(gZ, 3);
-      Serial.println();
-     */
   } 
   button.check();
 }
