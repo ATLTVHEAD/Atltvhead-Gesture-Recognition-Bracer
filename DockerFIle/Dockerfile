@@ -1,5 +1,5 @@
 #define base container
-ARG BASE_CONTAINER=jupyter/scipy-notebook:
+ARG BASE_CONTAINER=jupyter/scipy-notebook:04f7f60d34a6
 FROM $BASE_CONTAINER
 #create some metadata for the image
 LABEL maintainer = "Nate Damen <nate.damen@gmail.com>" \
@@ -24,7 +24,8 @@ RUN pip install --quiet --no-cache-dir \
     fix-permissions "/home/${NB_USER}"
 
 #run notebook upon container launch
-CMD ["jupyter","notebook","--ip='*'","--port=8888","--no-browser","--allow-root"]
+CMD ["jupyter","notebook","--ip='*'","--port=8888","--no-browser","--allow-root","--password=password"]
 
 #to build the docker file, cd to the appropriate directory and copy past the following into the terminal: docker build -t atltvhead/gesture_bracer . 
-#to run the this docker file use the following:  docker run -p 8888:8888 -v "C:/Users/nated/Documents/Python Scripts/Atltvhead-Gesture-Recognition-Bracer:/app/data" --name testbracer atltvhead/gesture_bracer:latest
+#to run the this docker file use the following:  docker run -p 10000:8888 -v "C:/Users/nated/Documents/Python Scripts/Atltvhead-Gesture-Recognition-Bracer:/app/data" --name bracer atltvhead/gesture_bracer:latest
+#to find out what the token is use the following docker exec bracer jupyter notebook list
