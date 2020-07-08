@@ -33,4 +33,4 @@ CMD ["jupyter","notebook","--ip='*'","--port=8888","--no-browser","--allow-root"
 #to run the this docker file use the following:  docker run -p 10000:8888 -v "C:/Users/nated/Documents/Python Scripts/Atltvhead-Gesture-Recognition-Bracer:/app/data" --name bracer atltvhead/gesture_bracer:latest
 #to find out what the token is use the following docker exec bracer jupyter notebook list
 #when restarting the docker container use http://localhost:10000/tree? to go to the notebook
-#when needing to add software or access the sudo command line for the docker use the following command in a windows cmd: docker exec -it -u root container_id bash
+#when needing to add software or access the sudo command line for the docker use the following command in a windows cmd: docker exec -it -u root bracer bash
