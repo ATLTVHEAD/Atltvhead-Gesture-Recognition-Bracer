@@ -27,7 +27,7 @@ def get_imu_data():
         serialport.readline()
 
     # Poll the serial port
-    line = str(serialport.readline(), 'utf-8')
+    line = str(serialport.readline(),'utf-8')
     if not line:
         return None
     #print(line)
@@ -50,11 +50,15 @@ def reshape_function(data):
 
 header = ["deltaTime","Acc_X","Acc_Y","Acc_Z","Gyro_X","Gyro_Y","Gyro_Z"]
 
-def date_pipeline(data):
+def dataframetest(data):
+    df=pd.DataFrame(data,columns=header)
+    print(len(df[['Acc_X','Acc_Y','Acc_Z']].to_numpy()))
+
+def data_pipeline(data):
     df = pd.DataFrame(data, columns = header)
-    data["Acc_X","Acc_Y","Acc_Z"].tolist()
+    #print(df[['Acc_X','Acc_Y','Acc_Z']].head())
     tensor_set = tf.data.Dataset.from_tensor_slices(
-        (np.array(data["Acc_X","Acc_Y","Acc_Z"].tolist(),dtype=np.float64)))
+        (np.array(df[["Acc_X","Acc_Y","Acc_Z"]].to_numpy(),dtype=np.float64)))
     tensor_set_cnn = tensor_set.map(reshape_function)
     tensor_set_cnn = tensor_set_cnn.batch(192)
     return tensor_set_cnn
@@ -72,7 +76,9 @@ while(1):
         #print(dataholder[0])
         data.append(dataholder)
     if dataholder == None and dataCollecting == True:
-        prediction = np.argmax(model.predict(date_pipeline(data)), axis=1)
-        print(prediction)
+        dataframetest(data)
+        #prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
+        #print(prediction)
+        #print(data_pipeline(data))
         data = []
         dataCollecting = False
