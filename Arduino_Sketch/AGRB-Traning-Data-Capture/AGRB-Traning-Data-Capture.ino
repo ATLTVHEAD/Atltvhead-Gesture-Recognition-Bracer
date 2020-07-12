@@ -89,15 +89,15 @@ void loop() {
   sensors_event_t gyro;
   sensors_event_t temp;
   sox.getEvent(&accel, &gyro, &temp);
-  //id++;
+  id++;
   currTime = millis();
   if(bpress){
     startTime = currTime;
     bpress = false;
-    //id = 0;
+    id = 0;
     //Serial.print("start");
   }
-  if(currTime-startTime <= 3000){
+  if(currTime-startTime <= 3200 && id < 760){
     //Serial.print(id);
     //Serial.print(',');
     Serial.print(currTime - startTime);

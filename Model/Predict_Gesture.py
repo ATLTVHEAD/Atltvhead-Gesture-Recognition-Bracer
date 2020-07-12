@@ -52,6 +52,7 @@ header = ["deltaTime","Acc_X","Acc_Y","Acc_Z","Gyro_X","Gyro_Y","Gyro_Z"]
 
 def date_pipeline(data):
     df = pd.DataFrame(data, columns = header)
+    data["Acc_X","Acc_Y","Acc_Z"].tolist()
     tensor_set = tf.data.Dataset.from_tensor_slices(
         (np.array(data["Acc_X","Acc_Y","Acc_Z"].tolist(),dtype=np.float64)))
     tensor_set_cnn = tensor_set.map(reshape_function)
