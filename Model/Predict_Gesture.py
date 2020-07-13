@@ -8,8 +8,9 @@ import random
 import tensorflow as tf
 import serial
 
-#PORT = "/dev/ttyUSB0"
-PORT = "COM8"
+PORT = "/dev/ttyUSB0"
+#PORT = "/dev/ttyUSB1"
+#PORT = "COM8"
 
 serialport = None
 serialport = serial.Serial(PORT, 115200, timeout=0.05)
@@ -70,17 +71,20 @@ gest_id = {0:'single_wave', 1:'fist_pump', 2:'random_motion', 3:'speed_mode'}
 data = []
 dataholder=[]
 dataCollecting = False
+first = True
+serialport.flush()
 
 while(1):
-    #serialport.flush()
     dataholder = get_imu_data()
     if dataholder != None:
         dataCollecting=True
-        #print(dataholder[0])
         data.append(dataholder)
     if dataholder == None and dataCollecting == True:
-        prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
-        gest_id[prediction[0]]
-        print(gest_id[prediction[0]])
+        if first == False:
+            prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
+            gest_id[prediction[0]]
+            print(gest_id[prediction[0]])
+        else:
+            first = False
         data = []
         dataCollecting = False
