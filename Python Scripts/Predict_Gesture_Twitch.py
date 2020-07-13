@@ -7,6 +7,8 @@ import time
 import random
 import tensorflow as tf
 import serial
+import socket
+import cfg
 
 PORT = "/dev/ttyUSB0"
 #PORT = "/dev/ttyUSB1"
