@@ -1,10 +1,10 @@
 /* AGRB-Training-Data-Capture.ino
 
-Description: Upon button press, send 2 seconds of data reads over serial. It will be recieved by Capture Data.py
+Description: Upon button press, send 3 seconds of data reads over serial. Long Press initiates stream of data sent. 760 points, with one second between streams. It will be recieved by Capture Data.py, Predict Gesture.py, and Predict Gesture Twitch.py
 
 Written by Nate Damen  
 Created: June 17,2020
-Updated: June 17,2020
+Updated: July 13,2020
 
 */
 
@@ -94,9 +94,19 @@ void loop() {
   if(bpress){
     startTime = currTime;
     bpress = false;
-    id = 0;
+    lpress = false;
+    if(id>760){
+      id = 0;
+    }
     //Serial.print("start");
   }
+  else if (lpress){
+    if(currTime-startTime >= 3500 && id >= 760){
+      startTime = currTime;
+      id = 0;
+    }
+  }
+
   if(currTime-startTime <= 3200 && id < 760){
     //Serial.print(id);
     //Serial.print(',');
@@ -120,7 +130,7 @@ void loop() {
     Serial.print(',');
     Serial.print(gyro.gyro.z - gyrocal[2],3);
     Serial.println(); 
-  } 
+  }
   button.check();
 }
 

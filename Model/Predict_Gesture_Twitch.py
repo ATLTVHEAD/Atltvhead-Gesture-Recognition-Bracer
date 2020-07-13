@@ -8,9 +8,9 @@ import random
 import tensorflow as tf
 import serial
 
-PORT = "/dev/ttyUSB0"
+#PORT = "/dev/ttyUSB0"
 #PORT = "/dev/ttyUSB1"
-#PORT = "COM8"
+PORT = "COM8"
 
 serialport = None
 serialport = serial.Serial(PORT, 115200, timeout=0.05)
@@ -34,18 +34,16 @@ def get_imu_data():
     line = str(serialport.readline(),'utf-8')
     if not line:
         return None
-    #print(line)
-    #if not "Uni:" in line:
-        #return None
+ 
     vals = line.replace("Uni:", "").strip().split(',')
-    #print(vals)
+ 
     if len(vals) != 7:
         return None
     try:
         vals = [float(i) for i in vals]
     except ValueError:
         return ValueError
-    #print(vals)
+ 
     return vals
 
 # Create Reshape function for each row of the dataset
@@ -73,12 +71,13 @@ def data_pipeline(data_a):
     tensor_set_cnn = tensor_set_cnn.batch(192)
     return tensor_set_cnn
 
-#define Gestures, current data, temp data holder, a first cylce boolean,
+#define Gestures, current data, temp data holder
 gest_id = {0:'single_wave', 1:'fist_pump', 2:'random_motion', 3:'speed_mode'}
 data = []
 dataholder=[]
 dataCollecting = False
-first = True
+gesture=''
+old_gesture=''
 
 #flush the serial port
 serialport.flush()
@@ -91,11 +90,11 @@ while(1):
         dataCollecting=True
         data.append(dataholder)
     if dataholder == None and dataCollecting == True:
-        if first == False:
+        if len(data) == 760:
             prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
-            gest_id[prediction[0]]
-            print(gest_id[prediction[0]])
-        else:
-            first = False
+            gesture=gest_id[prediction[0]]
+        if gesture != old_gesture:
+            print(gesture)
         data = []
         dataCollecting = False
+        old_gesture=gesture
