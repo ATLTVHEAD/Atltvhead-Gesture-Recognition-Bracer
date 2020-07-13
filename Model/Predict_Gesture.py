@@ -8,7 +8,8 @@ import random
 import tensorflow as tf
 import serial
 
-PORT = "/dev/ttyUSB0"
+#PORT = "/dev/ttyUSB0"
+PORT = "COM8"
 
 serialport = None
 serialport = serial.Serial(PORT, 115200, timeout=0.05)
@@ -50,20 +51,22 @@ def reshape_function(data):
 
 header = ["deltaTime","Acc_X","Acc_Y","Acc_Z","Gyro_X","Gyro_Y","Gyro_Z"]
 
-def dataframetest(data):
+def dataFrameLenTest(data):
     df=pd.DataFrame(data,columns=header)
-    print(len(df[['Acc_X','Acc_Y','Acc_Z']].to_numpy()))
+    x=len(df[['Acc_X','Acc_Y','Acc_Z']].to_numpy())
+    print(x)
+    return x
 
-def data_pipeline(data):
-    df = pd.DataFrame(data, columns = header)
-    #print(df[['Acc_X','Acc_Y','Acc_Z']].head())
+def data_pipeline(data_a):
+    df = pd.DataFrame(data_a, columns = header)
+    temp=df[['Acc_X','Acc_Y','Acc_Z']].to_numpy()
     tensor_set = tf.data.Dataset.from_tensor_slices(
-        (np.array(df[["Acc_X","Acc_Y","Acc_Z"]].to_numpy(),dtype=np.float64)))
+        (np.array([temp.tolist()],dtype=np.float64)))
     tensor_set_cnn = tensor_set.map(reshape_function)
     tensor_set_cnn = tensor_set_cnn.batch(192)
     return tensor_set_cnn
 
-
+gest_id = {0:'single_wave', 1:'fist_pump', 2:'random_motion', 3:'speed_mode'}
 data = []
 dataholder=[]
 dataCollecting = False
@@ -76,9 +79,8 @@ while(1):
         #print(dataholder[0])
         data.append(dataholder)
     if dataholder == None and dataCollecting == True:
-        dataframetest(data)
-        #prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
-        #print(prediction)
-        #print(data_pipeline(data))
+        prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
+        gest_id[prediction[0]]
+        print(gest_id[prediction[0]])
         data = []
         dataCollecting = False
