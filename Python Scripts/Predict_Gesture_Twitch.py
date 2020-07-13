@@ -8,15 +8,44 @@ import random
 import tensorflow as tf
 import serial
 
-#PORT = "/dev/ttyUSB0"
+PORT = "/dev/ttyUSB0"
 #PORT = "/dev/ttyUSB1"
-PORT = "COM8"
+#PORT = "COM8"
 
 serialport = None
 serialport = serial.Serial(PORT, 115200, timeout=0.05)
 
 #load Model
 model = tf.keras.models.load_model('../Model/cnn_model.h5')
+
+#Creating our socket and passing on info for twitch
+sock = socket.socket()
+sock.connect((cfg.HOST,cfg.PORT))
+sock.send("PASS {}\r\n".format(cfg.PASS).encode("utf-8"))
+sock.send("NICK {}\r\n".format(cfg.NICK).encode("utf-8"))
+sock.send("JOIN {}\r\n".format(cfg.CHAN).encode("utf-8"))
+sock.setblocking(0)
+
+#handling of some of the string characters in the twitch message
+chat_message = re.compile(r"^:\w+!\w+@\w+.tmi.twitch.tv PRIVMSG #\w+ :")
+
+#Lets create a new function that allows us to chat a little easier. Create two variables for the socket and messages to be passed in and then the socket send function with proper configuration for twitch messages. 
+def chat(s,msg):
+    s.send("PRIVMSG {} :{}\r\n".format(cfg.CHAN,msg).encode("utf-8"))
+
+#The next two functions allow for twitch messages from socket receive to be passed in and searched to parse out the message and the user who typed it. 
+def getMSG(r):
+    mgs = chat_message.sub("", r)
+    return mgs
+
+
+def getUSER(r):
+    try:
+        user=re.search(r"\w+",r).group(0)
+    except AttributeError:
+        user ="tvheadbot"
+        print(AttributeError)
+    return user
 
 #Get Data from imu. Waits for incomming data and data stop
 def get_imu_data():
@@ -72,7 +101,7 @@ def data_pipeline(data_a):
     return tensor_set_cnn
 
 #define Gestures, current data, temp data holder
-gest_id = {0:'single_wave', 1:'fist_pump', 2:'random_motion', 3:'speed_mode'}
+gest_id = {0:'wave_mode', 1:'fist_pump_mode', 2:'random_motion_mode', 3:'speed_mode'}
 data = []
 dataholder=[]
 dataCollecting = False
@@ -83,16 +112,34 @@ old_gesture=''
 serialport.flush()
 
 while(1):
-    dataholder = get_imu_data()
-    if dataholder != None:
-        dataCollecting=True
-        data.append(dataholder)
-    if dataholder == None and dataCollecting == True:
-        if len(data) == 760:
-            prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
-            gesture=gest_id[prediction[0]]
-        if gesture != old_gesture:
-            print(gesture)
-        data = []
-        dataCollecting = False
-        old_gesture=gesture
+    try:
+        response = sock.recv(1024).decode("utf-8")
+    except:
+        dataholder = get_imu_data()
+        if dataholder != None:
+            dataCollecting=True
+            data.append(dataholder)
+        if dataholder == None and dataCollecting == True:
+            if len(data) == 760:
+                prediction = np.argmax(model.predict(data_pipeline(data)), axis=1)
+                gesture=gest_id[prediction[0]]
+            if gesture != old_gesture:
+                chat(sock,'!' + gesture)
+                print(gesture)
+            data = []
+            dataCollecting = False
+            old_gesture=gesture
+    else:
+        if len(response)==0:
+            print('orderly shutdown on the server end')
+            sock = socket.socket()
+            sock.connect((cfg.HOST,cfg.PORT))
+            sock.send("PASS {}\r\n".format(cfg.PASS).encode("utf-8"))
+            sock.send("NICK {}\r\n".format(cfg.NICK).encode("utf-8"))
+            sock.send("JOIN {}\r\n".format(cfg.CHAN).encode("utf-8"))
+            sock.setblocking(0)
+        else:
+            print(response)
+            #pong the pings to stay connected 
+            if response == "PING :tmi.twitch.tv\r\n":
+                sock.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))

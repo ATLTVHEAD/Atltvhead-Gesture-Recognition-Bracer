@@ -101,7 +101,7 @@ void loop() {
     //Serial.print("start");
   }
   else if (lpress){
-    if(currTime-startTime >= 3500 && id >= 760){
+    if(currTime-startTime >= 3200 && id >= 760){
       startTime = currTime;
       id = 0;
     }
