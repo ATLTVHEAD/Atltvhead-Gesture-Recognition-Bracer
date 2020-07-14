@@ -83,8 +83,6 @@ first = True
 #flush the serial port
 serialport.flush()
 
-
-
 while(1):
     dataholder = get_imu_data()
     if dataholder != None:
