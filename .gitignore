@@ -19,3 +19,4 @@ val_set.csv
 
 #Ignore config file
 cfg.py
+cfg.cpython-38
