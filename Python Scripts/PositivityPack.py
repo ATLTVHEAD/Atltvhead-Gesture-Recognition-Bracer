@@ -1,3 +1,10 @@
+# PositivityPack.py
+# Description: Recieved Data from ESP32 Micro via the AGRB-Training-Data-Capture.ino file, make gesture prediction and tell it to twitch
+#   Display an image that changes according to what is said in twitch chat or after 30 seconds    
+# Written by: Nate Damen
+# Created on July 13th 2020
+
+
 import socket
 import cfg
 import re

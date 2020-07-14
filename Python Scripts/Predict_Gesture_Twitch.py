@@ -1,3 +1,8 @@
+# Predict_Gesture_Twitch.py
+# Description: Recieved Data from ESP32 Micro via the AGRB-Training-Data-Capture.ino file, make gesture prediction and tell it to twitch
+# Written by: Nate Damen
+# Created on July 13th 2020
+
 import numpy as np 
 import pandas as pd 
 import datetime
