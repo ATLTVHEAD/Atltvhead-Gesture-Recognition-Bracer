@@ -3,6 +3,7 @@
 #   Display an image that changes according to what is said in twitch chat or after 30 seconds    
 # Written by: Nate Damen
 # Created on July 13th 2020
+# Updated on July 15th 2020
 
 
 import socket
@@ -90,6 +91,20 @@ messages = [message1,message2,message3,message4,message5,message6,message7,messa
 displayimage = message1
 
 
+# header for the incomming data
+header = ["deltaTime","Acc_X","Acc_Y","Acc_Z","Gyro_X","Gyro_Y","Gyro_Z"]
+
+#define Gestures, current data, temp data holder
+gest_id = {0:'wave_mode', 1:'fist_pump_mode', 2:'random_motion_mode', 3:'speed_mode'}
+data = []
+dataholder=[]
+dataCollecting = False
+gesture=''
+old_gesture=''
+t=0
+ot=0
+
+
 #Creating our socket and passing on info for twitch
 sock = socket.socket()
 sock.connect((cfg.HOST,cfg.PORT))
@@ -153,9 +168,6 @@ def reshape_function(data):
     reshaped_data = tf.reshape(data, [-1, 3, 1])
     return reshaped_data
 
-# header for the incomming data
-header = ["deltaTime","Acc_X","Acc_Y","Acc_Z","Gyro_X","Gyro_Y","Gyro_Z"]
-
 #Create a way to see the length of the data incomming, needs to be 760 points. Used for testing incomming data
 def dataFrameLenTest(data):
     df=pd.DataFrame(data,columns=header)
@@ -172,16 +184,6 @@ def data_pipeline(data_a):
     tensor_set_cnn = tensor_set.map(reshape_function)
     tensor_set_cnn = tensor_set_cnn.batch(192)
     return tensor_set_cnn
-
-#define Gestures, current data, temp data holder
-gest_id = {0:'wave_mode', 1:'fist_pump_mode', 2:'random_motion_mode', 3:'speed_mode'}
-data = []
-dataholder=[]
-dataCollecting = False
-gesture=''
-old_gesture=''
-t=0
-ot=0
 
 def gesture_Handler(sock,data,dataholder,dataCollecting,gesture,old_gesture):
     dataholder = get_imu_data()
@@ -269,8 +271,8 @@ if __name__ == "__main__":
             if t-ot > 30:
                 displayimage = random.choice(messages)
                 ot=t
-            cv2.imshow("PositiveMessage",displayimage)
-            cv2.waitKey(1)
+                cv2.imshow("PositiveMessage",displayimage)
+                cv2.waitKey(1)
             continue
         else:
             if len(response)==0:
