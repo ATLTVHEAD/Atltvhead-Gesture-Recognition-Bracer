@@ -1,3 +1,17 @@
+#   Copyright 2020 Nate Damen
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
 import numpy as np 
 import pandas as pd 
 import datetime
@@ -66,28 +80,8 @@ def train_lstm(model, epochs_lstm, batch_size, tensor_train_set, tensor_val_set,
 
     #print(confusion_lstm)
     #print("Loss {}, Accuracy {}".format(loss_lstm, acc_lstm))
-    model.save('lstm_model.h5') 
+    #model.save('lstm_model.h5') 
     return model, confusion_lstm, loss_lstm, acc_lstm
-
-converter = tf.lite.TFLiteConverter.from_keras_model(lstm_model)
-lstm_tflite_model = converter.convert()
-
-open("lstm_model.tflite", "wb").write(lstm_tflite_model)
-
-converter = tf.lite.TFLiteConverter.from_keras_model(lstm_model)
-converter.experimental_new_converter = True
-converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
-converter.target_spec.supported_types = [tf.float16]
-lstm_opt_tflite_model = converter.convert()
-# Save the model to disk
-open("lstm_model_quantized.tflite", "wb").write(lstm_opt_tflite_model)
-
-basic_model_size = os.path.getsize("lstm_model.tflite")
-print("Basic model is %d bytes" % basic_model_size)
-quantized_model_size = os.path.getsize("lstm_model_quantized.tflite")
-print("Quantized model is %d bytes" % quantized_model_size)
-difference = basic_model_size - quantized_model_size
-print("Difference is %d bytes" % difference)
 
 """---------------------------------------------------------------------------"""
 
@@ -122,37 +116,27 @@ def train_CNN(model, epochs_cnn, batch_size, tensor_train_set, tensor_test_set, 
 
     #print(confusion_cnn)
     #print("Loss {}, Accuracy {}".format(loss_cnn, acc_cnn))
-    model.save('cnn_model.h5') 
+    #model.save('cnn_model.h5') 
     return model, confusion_cnn, loss_cnn, acc_cnn
 
+def convertToTFlite(model, modelName):
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    tflite_model = converter.convert()
+    # Save the model to disk
+    open(modelName+'.tflite', "wb").write(tflite_model)
+    # Optimize model for size
+    converter = tf.lite.TFLiteConverter.from_keras_model(model)
+    converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
+    opt_tflite_model = converter.convert()
+    # Save the model to disk
+    open(modelName+'_optimized.tflite', "wb").write(opt_tflite_model)
 
-converter = tf.lite.TFLiteConverter.from_keras_model(cnn_model)
-cnn_tflite_model = converter.convert()
-
-open("cnn_model.tflite", "wb").write(cnn_tflite_model)
-
-
-converter = tf.lite.TFLiteConverter.from_keras_model(cnn_model)
-converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
-cnn_opt_tflite_model = converter.convert()
-# Save the model to disk
-open("cnn_model_quantized.tflite", "wb").write(cnn_opt_tflite_model)
-
-basic_model_size = os.path.getsize("cnn_model.tflite")
-print("Basic model is %d bytes" % basic_model_size)
-quantized_model_size = os.path.getsize("cnn_model_quantized.tflite")
-print("Quantized model is %d bytes" % quantized_model_size)
-difference = basic_model_size - quantized_model_size
-print("Difference is %d bytes" % difference)
-
-
-## Install xxd if it is not available
-#!apt-get -qq install xxd
-## Save the file as a C source file
-#!xxd -i cnn_model_quantized.tflite > cnn_opt_model.cc
-## Print the source file
-#!cat /cnn_opt_model.cc
-
+    basic_model_size = os.path.getsize(modelName+'.tflite')
+    print("Basic model is %d bytes" % basic_model_size)
+    quantized_model_size = os.path.getsize(modelName+'_optimized.tflite')
+    print("Quantized model is %d bytes" % quantized_model_size)
+    difference = basic_model_size - quantized_model_size
+    print("Difference is %d bytes" % difference)
 
 if __name__=='__main__':
     #load in data sets
@@ -201,7 +185,22 @@ if __name__=='__main__':
     print(confusion_cnn)
     print("Loss {}, Accuracy {}".format(loss_cnn, acc_cnn))
 
-    
+    lstm_model.save('lstm_model.h5') 
+    cnn_model.save('cnn_model.h5')
 
-
-
+    convertToTFlite(cnn_model, 'cnn_model')
+    try:
+        #had some problems with the optimized LSTM model 
+        convertToTFlite(lstm_model, 'lstm_model')
+    except Exception:
+        print(Exception)
+        
+    # Convert models to a cc file for use with arduino tflite on linux
+    ## Install xxd if it is not available
+    #!apt-get -qq install xxd
+    #Downloaded a windows port of xxd at https://userweb.weihenstephan.de/syring/win32/UnxUtilsDist.html or use the format-hex in windows
+    ## Save the file as a C source file
+    #!xxd -i cnn_model_quantized.tflite > cnn_opt_model.cc
+    ## Print the source file
+    #!cat /cnn_opt_model.cc     
+    #could use the type command on windows to achieve similar
