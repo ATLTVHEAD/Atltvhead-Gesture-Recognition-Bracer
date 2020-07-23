@@ -11,9 +11,9 @@
 augment_train_data.csv
 complete_data.csv
 test_set.csv
-processed_train_set
-processed_test_set
-processed_val_set
+processed_train_set.csv
+processed_test_set.csv
+processed_val_set.csv
 train_set.csv
 val_set.csv
 

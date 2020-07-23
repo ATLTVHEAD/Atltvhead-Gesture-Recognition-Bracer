@@ -44,6 +44,7 @@ To ensure you and I will get the "same" model I've included a Docker make file f
 As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts folder, will take all of your data from the data collection, split them between training/test/validation sets, augment the training data, and finalized CSVs ready for the model training.
 
 
+
 # Model Building
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the augmentation CSV, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
 
