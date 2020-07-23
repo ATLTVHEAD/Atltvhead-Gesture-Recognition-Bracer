@@ -35,8 +35,6 @@ In the Training_Data folder, locate the CaptureData.py script. With the Arduino 
 
 I choose 3 seconds of data collection or roughly 760 data points mainly because I wasn't positive how long each gesture would take to be performed. Anywho, more data is better right?
 
-If you want to reproduce my model as closely as possible. I've included the training, test, and validation data sets. 
-
 # Docker File
 To ensure you and I will get the "same" model I've included a Docker make file for you! I used this docker container while processing my data and training my model. It's based on the Jupiter Notebooks TensorFlow docker container. 
 
@@ -46,7 +44,7 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 
 
 # Model Building
-As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the augmentation CSV, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
+As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
 
 
 
