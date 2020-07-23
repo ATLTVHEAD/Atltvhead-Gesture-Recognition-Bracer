@@ -11,18 +11,29 @@ This repository is my own spin on Jennifer Wang's and Google Tensorflow's magic 
 5) Run Predict_Gesture.py and press the button on the arduino to take a motion recording and see the results printed out. 
 
 # The problem:
-I spread cheer in Atlanta with an interactive livestreams. I wear an old tv (with working led display) as a helmet and backpack with a display. Twitch chat controls what's displayed on the television screen and on the backpack screen through chat commands. Together Twitch chat and I go through the city of Atlanta, Ga spreading cheer. 
+I run an interactive livestream. I wear an old tv (with working led display) as a helmet and backpack with a display. Twitch chat controls what's displayed on the television screen and on the backpack screen through chat commands. Together Twitch chat and I go through the city of Atlanta, Ga spreading cheer. 
 
-As time has gone on, I have over 14 channel commands for the tv display. Remembering and even copypasting all has become complicated and tedious. So it's time to simplicy my interface to the tvhead.
+As time has gone on, I have over 20 channel commands for the tv display. Remembering and even copypasting all has become complicated and tedious. So it's time to simplicy my interface to the tvhead.
  What are my resources? 
 During the livestream, I am on rollerblades, my right hand is holding the camera, my left hand has a high five detecting glove I've built from a lidar sensor and esp32, my backpack has a raspberry pi 4, and a website with buttons that post commands in twitch chat. 
  What to simplify?
 I'd like to simplify the channel commands down to 4 options and reduce the website buttons down to those 4 as well. 
  What resources to use?
-I am going to add to my high five glove, while removing the lidar sensor, and feed the raspberry pi with acceleration and gyroscope data. 
+I am going to change my high five glove, removing the lidar sensor, and feed the raspberry pi with acceleration and gyroscope data. So that the Pi can inference a gesture performed from the arm data.
+
+# The Goals
+
 
 
 # Arduino
+
 # Data Collection
+
 # Model Building
+
 # Raspberry Pi Deployment
+
+# Future Work
+    -shrink snapshot window (down from 3sec to 1.5 ~ 2sec)
+    -Test if gyro data improves continuous snapshot mode
+    -Deploy on ESP32 with TinyML/TensorflowLite
