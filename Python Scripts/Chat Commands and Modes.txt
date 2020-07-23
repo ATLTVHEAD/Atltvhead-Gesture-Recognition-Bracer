@@ -1,0 +1,26 @@
+Random Motion mode :
+    "0" = Heart Outline
+    "1" = Gradient Heart
+    "2" = Rainbow Heart
+    "3" = ATL United Heart
+    
+Wave Mode:
+    "0" = Heart with color cycling
+    "1" = Sparkle Heart
+    "2" = Sectional Colors
+    "3" = ATL Marta Heart
+
+Fist Pump Mode:
+    "0" = Gradient Heart with color cycling
+    "1" = Sailor Moon Heart
+    "2" = Black and White Cycling Heart
+    "3" = BLM Heart
+
+Speed Mode:
+    "0" = Perlin Noise with Heart Outline
+    "1" = Perlin noise heart 
+    "2" = Perlin Noise across the whole screen
+    "3" = Power Puff Girls heart
+
+Modes = Me, gesture controlled
+Channels = User, "command" typed into Twitch chat

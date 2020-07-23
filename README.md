@@ -17,7 +17,7 @@ As time has gone on, I have over 20 channel commands for the tv display. Remembe
  What are my resources? 
 During the livestream, I am on rollerblades, my right hand is holding the camera, my left hand has a high five detecting glove I've built from a lidar sensor and esp32, my backpack has a raspberry pi 4, and a website with buttons that post commands in twitch chat. 
  What to simplify?
-I'd like to simplify the channel commands down to 4 options and reduce the website buttons down to those 4 as well. 
+I'd like to simplify the channel commands and gamify it a bit more.
  What resources to use?
 I am going to change my high five glove, removing the lidar sensor, and feed the raspberry pi with acceleration and gyroscope data. So that the Pi can inference a gesture performed from the arm data.
 
