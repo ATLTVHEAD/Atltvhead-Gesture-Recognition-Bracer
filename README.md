@@ -119,6 +119,6 @@ To infer gestures and send them to Twitch, use the PositivityPack.py or the Pred
 It works! The gesture prediction works perfectly, when triggering a gesture prediction from the arm attachment. Continous snapshot mode works well, but feels sluggish in use due to the 3 seconds data sampling between gesture predictions.
 
 # Future Work:
-    -Shrink data capture window from 3secs to 1.5 ~ 2secs, improving Continuous snapshot mode
+    -Shrink data capture window from 3secs to 1.5 ~ 2secs
     -Test if gyro data improves continuous snapshot mode
     -Deploy on ESP32 with TinyML/TensorflowLite
