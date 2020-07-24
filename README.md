@@ -83,6 +83,23 @@ Before Augmenting I had 168 samples in my training set, 23 in my test set, and 3
 # Model Building:
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
 
+For which model to use, I looked towards my predecessors works. They used Scikit-learn's SDG Classifier, a CNN, and an LSTM. Since I want to eventually deploy on the esp32 with TinyML, I scikit learn is out. 2D CNN's and LSTM's are both valid options for deployment, so Lets define the two models. 
+
+**CNN** 
+I made a 10 layer CNN. The first layer being a 2D convolution layer, going into a maxpool, dropout, another 2D convolution, another maxpool, another dropout, a flattening, a dense, a final dropout, and a dense output layer for the 4 gestures. 
+
+After tuning hyperparameters, I ended up with a batch size of 192, 300 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical corssentropy for my loss, having accuracy as the metric to measure. 
+
+**LSTM**
+Using Tensorflow I made a senquencial LTSM model with 22 bidirectional layers and a dense output layer classifying to my 4 gestures.  
+
+After tuning hyperparameters, I ended up with a batch size of 64, 200 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical corssentropy for my loss, having accuracy as the metric to measure. 
+
+Both the CNN and LSTM perfectly predicted the gestures of the training set. The LSTM with a loss of 0.04 and the CNN with a loss of 0.007 during the test. 
+
+Next I looked at the Training Validation loss per epoch of training. 
+![Training Validation Loss](/Jypter_Scripts/images/Model_Losses.png)
+
 
 
 # Raspberry Pi Deployment:
