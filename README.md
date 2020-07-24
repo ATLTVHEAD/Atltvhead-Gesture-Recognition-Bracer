@@ -44,12 +44,13 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 ## The following conclusions and findings are found in Jypter_Scripts/Data_Exploration.ipynb file:
 
 - The first exploration task I conducted was to use seaborn's pairplot to plot all variables against one another for each different type of gesture. I was looking to see if there was any noticable outright linear or logistic relationships between variables. None popped out to me. 
-![GitHub Logo](/Jypter_Scripts/images/Accels.png)
-Format: ![Gesture Acclerations](url)
+![Fist Pump Pairplot](/Jypter_Scripts/images/fist_pump_pairplot.png)
 
 - Looking at the descriptions, I noticed that each gesture sampling had a different number of points, and are not consistant between samples of the same gesture.
 
 - Each gestures acceleration data and gyroscope data is pretty unqiue when looking at time series plots. With fist pump mode and speed mode looking the most similar and will probably be the trickiest to differentiate from one another.
+![Gesture Acclerations](/Jypter_Scripts/images/Accels.png)
+![Gesture Gyroscopes](/Jypter_Scripts/images/Gyros.png)
 
 - Conducting a PCA of the different gestures yielded that the most "important" type of raw data is acceleration. However, when conducting a PCA with min/max normalized acceleration and gyroscope data, the most important feature became the normalized gyroscope data. Specifically Gyro_Z seems to contribute the most to principal component, across all gestures. 
 
