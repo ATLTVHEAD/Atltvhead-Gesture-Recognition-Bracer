@@ -43,17 +43,15 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 
 ## The following conclusions and findings are found in Jypter_Scripts/Data_Exploration.ipynb file:
 
-The first exploration task I conducted was to use seaborn's pairplot to plot all variables against one another for each different type of gesture. I was looking to see if there was any noticable outright linear or logistic relationships between variables. None popped out to me. 
+-The first exploration task I conducted was to use seaborn's pairplot to plot all variables against one another for each different type of gesture. I was looking to see if there was any noticable outright linear or logistic relationships between variables. None popped out to me. 
 
-Looking at the descriptions, I noticed that each gesture sampling had a different number of points, and are not consistant between samples of the same gesture.
+-Looking at the descriptions, I noticed that each gesture sampling had a different number of points, and are not consistant between samples of the same gesture.
 
-Each gestures acceleration data and gyroscope data is pretty unqiue when looking at time series plots. With fist pump mode and speed mode looking the most similar and will probably be the trickiest to differentiate from one another.
+-Each gestures acceleration data and gyroscope data is pretty unqiue when looking at time series plots. With fist pump mode and speed mode looking the most similar and will probably be the trickiest to differentiate from one another.
 
-Conducting a PCA of the different gestures yielded that the most "important" type of raw data is acceleration. However, when conducting a PCA with min/max normalized acceleration and gyroscope data, the most important feature became the normalized gyroscope data. Specifically Gyro_Z seems to contribute the most to principal component, across all gestures. 
+-Conducting a PCA of the different gestures yielded that the most "important" type of raw data is acceleration. However, when conducting a PCA with min/max normalized acceleration and gyroscope data, the most important feature became the normalized gyroscope data. Specifically Gyro_Z seems to contribute the most to principal component, across all gestures. 
 
-So now the decision. The PCA of Raw Data says that accelerations work. The PCA of Normalized Data seems to conclude that gyroscope data works. Since I'd like to eventually move this project over to the esp32, less data processing will reduce processing overhead on the micro. So lets try just using the raw acceleration data first. 
-
-If that doesn't work, I'll add in the raw gyroscope data. If none of those work well, I'll normalize the data. 
+-So now the decision. The PCA of Raw Data says that accelerations work. The PCA of Normalized Data seems to conclude that gyroscope data works. Since I'd like to eventually move this project over to the esp32, less data processing will reduce processing overhead on the micro. So lets try just using the **raw acceleration data** first. If that doesn't work, I'll add in the raw gyroscope data. If none of those work well, I'll normalize the data. 
 
 # Model Building
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
