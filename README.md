@@ -32,8 +32,14 @@ The AGRB-Traning-Data-Capture.ino in the Arduino_Sketch folder is my Arduino scr
 
 The data stream is started after the button on the Arduino is pressed and stops after 3 seconds. It is similar to a photograph, but instead of an x/y of camera pixels, its sensor data/time. 
 
+# Machine Learning Flow
+
+![My Flow](/Jypter_Scripts/images/Machine_Learning_Flow_Chart-01.png)
+
 # Data Collection
 In the Training_Data folder, locate the CaptureData.py script. With the Arduino loaded with the AGRB-Traning-Data-Capture.ino script and connected to the capture computer with a USB cable, run the CaptureData.py script. It'll ask for the name of the gesture you are capturing. Then when you are ready to perform the gesture press the button on the Arduino and perform the gesture within 3 seconds. When you have captured enough of one gesture, stop the python script. Rinse and Repeat. 
+
+![Bracer Gif](/Arduino_Sketch/images/Biting.gif)
 
 I choose 3 seconds of data collection or roughly 760 data points mainly because I wasn't positive how long each gesture would take to be performed. Anywho, more data is better right?
 
@@ -71,6 +77,7 @@ As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts fo
 # Raspberry Pi Deployment
 I used a raspberry pi 4 for my deployment. It was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. I'll eventually phase it out for the ESP32 and TinyML once that model is solid. 
 
+# Conclusions
 
 
 # Future Work
