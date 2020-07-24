@@ -61,8 +61,7 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 ![Gesture Gyroscopes](/Jypter_Scripts/images/Gyros.png)
 
 - Conducting a PCA of the different gestures yielded that the most "important" type of raw data is acceleration. However, when conducting a PCA with min/max normalized acceleration and gyroscope data, the most important feature became the normalized gyroscope data. Specifically Gyro_Z seems to contribute the most to principal component, across all gestures. 
-![Raw Data PCA](/Jypter_Scripts/images/Raw_PCA_Fist_Pump.png)
-![Normalized Data PCA](/Jypter_Scripts/images/Normalized_PCA_Fist_Pump.png)
+![PCA's](/Jypter_Scripts/images/PCAs.png)
 
 - So now the decision. The PCA of Raw Data says that accelerations work. The PCA of Normalized Data seems to conclude that gyroscope data works. Since I'd like to eventually move this project over to the esp32, less data processing will reduce processing overhead on the micro. So lets try just using the **raw acceleration data** first. If that doesn't work, I'll add in the raw gyroscope data. If none of those work well, I'll normalize the data. 
 
