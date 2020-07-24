@@ -95,12 +95,16 @@ Using Tensorflow I made a senquencial LTSM model with 22 bidirectional layers an
 
 After tuning hyperparameters, I ended up with a batch size of 64, 200 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical corssentropy for my loss, having accuracy as the metric to measure. 
 
+**Model Selection** 
 Both the CNN and LSTM perfectly predicted the gestures of the training set. The LSTM with a loss of 0.04 and the CNN with a loss of 0.007 during the test. 
 
-Next I looked at the Training Validation loss per epoch of training. 
+Next I looked at the Training Validation loss per epoch of training. From the look of it, the CNN with batch size of 192 is pretty close to being fit correctly. The CNN batch size of 64 and the LSTM both seem a little overfit.
 ![Training Validation Loss](/Jypter_Scripts/images/Model_Losses.png)
 
+So I choose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size.
 
+# Testing 
+I wrote a gesture prediction test script for both the regular model and the tflight model. Both models work!
 
 # Raspberry Pi Deployment:
 I used a raspberry pi 4 for my deployment. It was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. I'll eventually phase it out for the ESP32 and TinyML once that model is solid. 
