@@ -51,24 +51,34 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 
 ## The following conclusions and findings are found in Jypter_Scripts/Data_Exploration.ipynb file:
 
-- The first exploration task I conducted was to use seaborn's pairplot to plot all variables against one another for each different type of gesture. I was looking to see if there was any noticable outright linear or logistic relationships between variables. None popped out to me. 
+- The first exploration task I conducted was to use seaborn's pair plot to plot all variables against one another for each different type of gesture. I was looking to see if there was any noticeable outright linear or logistic relationships between variables. None popped out to me. 
 ![Fist Pump Pairplot](/Jypter_Scripts/images/fist_pump_pairplot.png)
 
-- Looking at the descriptions, I noticed that each gesture sampling had a different number of points, and are not consistant between samples of the same gesture.
+- Looking at the descriptions, I noticed that each gesture sampling had a different number of points, and are not consistent between samples of the same gesture.
 
-- Each gestures acceleration data and gyroscope data is pretty unqiue when looking at time series plots. With fist pump mode and speed mode looking the most similar and will probably be the trickiest to differentiate from one another.
+- Each gesture's acceleration data and gyroscope data is pretty unique when looking at time series plots. With fist-pump mode and speed mode looking the most similar and will probably be the trickiest to differentiate from one another.
 ![Gesture Acclerations](/Jypter_Scripts/images/Accels.png)
 ![Gesture Gyroscopes](/Jypter_Scripts/images/Gyros.png)
 
-- Conducting a PCA of the different gestures yielded that the most "important" type of raw data is acceleration. However, when conducting a PCA with min/max normalized acceleration and gyroscope data, the most important feature became the normalized gyroscope data. Specifically Gyro_Z seems to contribute the most to principal component, across all gestures. 
+- Conducting a PCA of the different gestures yielded that the most "important" type of raw data is acceleration. However, when conducting a PCA with min/max normalized acceleration and gyroscope data, the most important feature became the normalized gyroscope data. Specifically, Gyro_Z seems to contribute the most to the first principal component, across all gestures.
 ![PCA's](/Jypter_Scripts/images/PCAs.png)
 
-- So now the decision. The PCA of Raw Data says that accelerations work. The PCA of Normalized Data seems to conclude that gyroscope data works. Since I'd like to eventually move this project over to the esp32, less data processing will reduce processing overhead on the micro. So lets try just using the **raw acceleration data** first. If that doesn't work, I'll add in the raw gyroscope data. If none of those work well, I'll normalize the data. 
+- So now the decision. The PCA of Raw Data says that accelerations work. The PCA of Normalized Data seems to conclude that gyroscope data works. Since I'd like to eventually move this project over to the esp32, less pre-processing will reduce processing overhead on the micro. So let's try just using the **raw acceleration data** first. If that doesn't work, I'll add in the raw gyroscope data. If none of those work well, I'll normalize the data. 
 
 ## The following information is can be found in more detail in the Jypter_Scripts/Data Cleaning and Augmentation.ipynb file:
 
+Since I was collecting the data myself, I have a super small data set. Meaning I will most likely overfit my model. To overcome this I implemented augmentation techniques to my data set.
 
+The augmentation techniques used are as follows:
+1) Increase and decrease the peaks of the XYZ data
+2) Shift the data to complete faster or slower. Time stretch and shrink.
+3) Add noise to the data points
+4) Increase and decrease the magnitude the XYZ data uniformly
+5) Shift the snapshot window around the time series data, making the gesture start sooner or later
 
+To address the number of data points inconsistency, I found that 760 data points per sample was the average. I then implemented a script that cut off the front and end of my data by a certain number of samples depending on the length. Saving the first half and the second half as two different samples, to keep as much data as possible. This cut data had a final length of 760 for each sample. 
+
+Before Augmenting I had 168 samples in my training set, 23 in my test set, and 34 in my validation set. After I augmenting I ended up with 8400 samples in my training set, 46 in my test set, and 68 in my validation set. Still small, but way better than before. 
 
 # Model Building:
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
@@ -82,6 +92,6 @@ I used a raspberry pi 4 for my deployment. It was already in a previous tvhead b
 
 
 # Future Work:
-    -shrink data capture window from 3secs to 1.5 ~ 2secs
+    -Shrink data capture window from 3secs to 1.5 ~ 2secs
     -Test if gyro data improves continuous snapshot mode
     -Deploy on ESP32 with TinyML/TensorflowLite
