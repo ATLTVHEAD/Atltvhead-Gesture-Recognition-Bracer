@@ -28,7 +28,7 @@ A working gesture detection model using TensorFlow and sensor data.
 # Arduino
 The AGRB-Traning-Data-Capture.ino in the Arduino_Sketch folder is my Arduino script to pipe acceleration and gyroscope data from an Adafruit LSM6DSOX 9dof IMU out of the USB serial port. An esp32 Thingplus by SparkFun is the board I've chosen due to the Qwiic connector support between this board and the Adafruit IMU. A push-button is connected between ground and pin 33 with the internal pullup resistor on. Eventually, I plan to deploy a tflite model on the esp32, so I've included a battery.
 
-![ESP32 Layout](/Arduino_Sketch/images/Esp32 layout.jpg)
+![ESP32 Layout](/Arduino_Sketch/images/Esp32_layout.png)
 
 The data stream is started after the button on the Arduino is pressed and stops after 3 seconds. It is similar to a photograph, but instead of an x/y of camera pixels, its sensor data/time. 
 
