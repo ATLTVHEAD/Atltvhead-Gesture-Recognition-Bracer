@@ -83,22 +83,22 @@ Before Augmenting I had 168 samples in my training set, 23 in my test set, and 3
 # Model Building and Selection:
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
 
-For which model to use, I looked towards my predecessors works. They used Scikit-learn's SDG Classifier, a CNN, and an LSTM. Since I want to eventually deploy on the esp32 with TinyML, I scikit learn is out. 2D CNN's and LSTM's are both valid options for deployment, so Lets define the two models. 
+For which model to use, I looked towards my predecessors' works. They used Scikit-learn's SDG Classifier, a CNN, and an LSTM. Since I want to eventually deploy on the esp32 with TinyML, I Scikit learn is out. 2D CNN's and LSTM's are both valid options for deployment, so let's define the two models. 
 
 **CNN** 
 I made a 10 layer CNN. The first layer being a 2D convolution layer, going into a maxpool, dropout, another 2D convolution, another maxpool, another dropout, a flattening, a dense, a final dropout, and a dense output layer for the 4 gestures. 
 
-After tuning hyperparameters, I ended up with a batch size of 192, 300 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical corssentropy for my loss, having accuracy as the metric to measure. 
+After tuning hyperparameters, I ended up with a batch size of 192, 300 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical cross-entropy for my loss, having accuracy as the metric to measure. 
 
 **LSTM**
-Using Tensorflow I made a senquencial LTSM model with 22 bidirectional layers and a dense output layer classifying to my 4 gestures.  
+Using Tensorflow I made a sequential LTSM model with 22 bidirectional layers and a dense output layer classifying to my 4 gestures.  
 
-After tuning hyperparameters, I ended up with a batch size of 64, 200 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical corssentropy for my loss, having accuracy as the metric to measure. 
+After tuning hyperparameters, I ended up with a batch size of 64, 200 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical cross-entropy for my loss, having accuracy as the metric to measure. 
 
 **Model Selection** 
 Both the CNN and LSTM perfectly predicted the gestures of the training set. The LSTM with a loss of 0.04 and the CNN with a loss of 0.007 during the test. 
 
-Next I looked at the Training Validation loss per epoch of training. From the look of it, the CNN with batch size of 192 is pretty close to being fit correctly. The CNN batch size of 64 and the LSTM both seem a little overfit.
+Next, I looked at the Training Validation loss per epoch of training. From the look of it, the CNN with a batch size of 192 is pretty close to being fit correctly. The CNN batch size of 64 and the LSTM both seem a little overfit.
 ![Training Validation Loss](/Jypter_Scripts/images/Model_Losses.png)
 
 So I chose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size.
@@ -107,16 +107,16 @@ So I chose to proceed with the CNN model, trained with a batch size of 192. I sa
 I wrote a gesture prediction test script for both the regular model and the tflight model. Both models work!
 
 # Raspberry Pi Deployment:
-I used a raspberry pi 4 for my current deployment, since it was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. 
+I used a raspberry pi 4 for my current deployment since it was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. 
 
-The pi is in a backpack with a display. On the display is a positive message that changes based on what is said in my Twitch chat, during live streams. I used this same script, but added the tensorflow model gesture prediction components from the Predict_Gesture_Twitch.py script to create the PositivityPack.py script. 
+The pi is in a backpack with a display. On the display is a positive message that changes based on what is said in my Twitch chat, during live streams. I used this same script but added the TensorFlow model gesture prediction components from the Predict_Gesture_Twitch.py script to create the PositivityPack.py script. 
 
 To infer gestures and send them to Twitch, use the PositivityPack.py or the Predict_Gesture_Twitch.py. They run the heavy .h5 model file. To run the tflite model on the raspberry pi run the Test_TFLite_Inference_Serial_Input.py script. You'll need to connect the raspberry pi with the ESP32 in the arm attachment using a USB cable. Press the button the arm attachment to send data and predict gesture. Long press the button to continually detect gestures, continuous snapshot mode.
 
-**Note:** When running the scripts that communicate with Twitch you'll need to follow [Twitch's chatbot development](https://dev.twitch.tv/docs/irc) documentation for creating your own chatbot and authenticating it. 
+**Note:** When running the scripts that communicate with Twitch you'll need to follow [Twitch's chatbot development](https://dev.twitch.tv/docs/irc) documentation for creating your chatbot and authenticating it. 
 
 # Conclusions:
-It works! The gesture prediction works perfectly, when triggering a gesture prediction from the arm attachment. Continous snapshot mode works well, but feels sluggish in use due to the 3 seconds data sampling between gesture predictions.
+It works! The gesture prediction works perfectly when triggering a gesture prediction from the arm attachment. Continous snapshot mode works well but feels sluggish in use due to the 3 seconds data sampling between gesture predictions.
 
 # Future Work:
     -Shrink data capture window from 3secs to 1.5 ~ 2secs
