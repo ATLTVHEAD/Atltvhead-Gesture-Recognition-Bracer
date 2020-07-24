@@ -80,7 +80,7 @@ To address the number of data points inconsistency, I found that 760 data points
 
 Before Augmenting I had 168 samples in my training set, 23 in my test set, and 34 in my validation set. After I augmenting I ended up with 8400 samples in my training set, 46 in my test set, and 68 in my validation set. Still small, but way better than before. 
 
-# Model Building:
+# Model Building and Selection:
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
 
 For which model to use, I looked towards my predecessors works. They used Scikit-learn's SDG Classifier, a CNN, and an LSTM. Since I want to eventually deploy on the esp32 with TinyML, I scikit learn is out. 2D CNN's and LSTM's are both valid options for deployment, so Lets define the two models. 
@@ -101,18 +101,24 @@ Both the CNN and LSTM perfectly predicted the gestures of the training set. The 
 Next I looked at the Training Validation loss per epoch of training. From the look of it, the CNN with batch size of 192 is pretty close to being fit correctly. The CNN batch size of 64 and the LSTM both seem a little overfit.
 ![Training Validation Loss](/Jypter_Scripts/images/Model_Losses.png)
 
-So I choose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size.
+So I chose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size.
 
 # Testing 
 I wrote a gesture prediction test script for both the regular model and the tflight model. Both models work!
 
 # Raspberry Pi Deployment:
-I used a raspberry pi 4 for my deployment. It was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. I'll eventually phase it out for the ESP32 and TinyML once that model is solid. 
+I used a raspberry pi 4 for my current deployment, since it was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. 
+
+The pi is in a backpack with a display. On the display is a positive message that changes based on what is said in my Twitch chat, during live streams. I used this same script, but added the tensorflow model gesture prediction components from the Predict_Gesture_Twitch.py script to create the PositivityPack.py script. 
+
+To infer gestures and send them to Twitch, use the PositivityPack.py or the Predict_Gesture_Twitch.py. They run the heavy .h5 model file. To run the tflite model on the raspberry pi run the Test_TFLite_Inference_Serial_Input.py script. You'll need to connect the raspberry pi with the ESP32 in the arm attachment using a USB cable. Press the button the arm attachment to send data and predict gesture. Long press the button to continually detect gestures, continuous snapshot mode.
+
+**Note:** When running the scripts that communicate with Twitch you'll need to follow [Twitch's chatbot development](https://dev.twitch.tv/docs/irc) documentation for creating your own chatbot and authenticating it. 
 
 # Conclusions:
-
+It works! The gesture prediction works perfectly, when triggering a gesture prediction from the arm attachment. Continous snapshot mode works well, but feels sluggish in use due to the 3 seconds data sampling between gesture predictions.
 
 # Future Work:
-    -Shrink data capture window from 3secs to 1.5 ~ 2secs
+    -Shrink data capture window from 3secs to 1.5 ~ 2secs, improving Continuous snapshot mode
     -Test if gyro data improves continuous snapshot mode
     -Deploy on ESP32 with TinyML/TensorflowLite
