@@ -10,7 +10,7 @@ This repository is my spin on Jennifer Wang's and Google Tensorflow's magic wand
 4) Once all the data is collected, navigate to the Python Scripts folder and run DataPipeline.py and ModelPipeline.py in that order. Models are trained here and can time some time. 
 5) Run Predict_Gesture.py and press the button on the Arduino to take a motion recording and see the results printed out. 
 
-# The problem:
+# Problem:
 I run an interactive live stream. I wear an old tv (with working led display) like a helmet and backpack with a display. Twitch chat controls what's displayed on the television screen and the backpack screen through chat commands. Together Twitch chat and I go through the city of Atlanta, Ga spreading cheer. 
 
 As time has gone on, I have over 20 channel commands for the tv display. Remembering and even copypasting all has become complicated and tedious. So it's time to simplify my interface to the tvhead.
@@ -21,32 +21,32 @@ I'd like to simplify the channel commands and gamify it a bit more.
  What resources to use?
 I am going to change my high five gloves, removing the lidar sensor, and feed the raspberry pi with acceleration and gyroscope data. So that the Pi can inference a gesture performed from the arm data.
 
-# Goals
+# Goal:
 
 A working gesture detection model using TensorFlow and sensor data.
 
-# Arduino
+# Machine Learning Flow:
+
+![My Flow](/Jypter_Scripts/images/Machine_Learning_Flow_Chart-02.png)
+
+# Arduino Setup:
 The AGRB-Traning-Data-Capture.ino in the Arduino_Sketch folder is my Arduino script to pipe acceleration and gyroscope data from an Adafruit LSM6DSOX 9dof IMU out of the USB serial port. An esp32 Thingplus by SparkFun is the board I've chosen due to the Qwiic connector support between this board and the Adafruit IMU. A push-button is connected between ground and pin 33 with the internal pullup resistor on. Eventually, I plan to deploy a tflite model on the esp32, so I've included a battery.
 
 ![ESP32 Layout](/Arduino_Sketch/images/Esp32_layout.png)
 
 The data stream is started after the button on the Arduino is pressed and stops after 3 seconds. It is similar to a photograph, but instead of an x/y of camera pixels, its sensor data/time. 
 
-# Machine Learning Flow
-
-![My Flow](/Jypter_Scripts/images/Machine_Learning_Flow_Chart-01.png)
-
-# Data Collection
+# Data Collection:
 In the Training_Data folder, locate the CaptureData.py script. With the Arduino loaded with the AGRB-Traning-Data-Capture.ino script and connected to the capture computer with a USB cable, run the CaptureData.py script. It'll ask for the name of the gesture you are capturing. Then when you are ready to perform the gesture press the button on the Arduino and perform the gesture within 3 seconds. When you have captured enough of one gesture, stop the python script. Rinse and Repeat. 
 
 ![Bracer Gif](/Arduino_Sketch/images/Biting.gif)
 
 I choose 3 seconds of data collection or roughly 760 data points mainly because I wasn't positive how long each gesture would take to be performed. Anywho, more data is better right?
 
-# Docker File
+# Docker File:
 To ensure you and I will get the "same" model I've included a Docker make file for you! I used this docker container while processing my data and training my model. It's based on the Jupiter Notebooks TensorFlow docker container. 
 
-# Data Exploration and Augmentation
+# Data Exploration and Augmentation:
 As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts folder, will take all of your data from the data collection, split them between training/test/validation sets, augment the training data, and finalized CSVs ready for the model training.
 
 ## The following conclusions and findings are found in Jypter_Scripts/Data_Exploration.ipynb file:
@@ -61,6 +61,8 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 ![Gesture Gyroscopes](/Jypter_Scripts/images/Gyros.png)
 
 - Conducting a PCA of the different gestures yielded that the most "important" type of raw data is acceleration. However, when conducting a PCA with min/max normalized acceleration and gyroscope data, the most important feature became the normalized gyroscope data. Specifically Gyro_Z seems to contribute the most to principal component, across all gestures. 
+![Raw Data PCA](/Jypter_Scripts/images/Raw_PCA_Fist_Pump.png)
+![Normalized Data PCA](/Jypter_Scripts/images/Normalized_PCA_Fist_Pump.png)
 
 - So now the decision. The PCA of Raw Data says that accelerations work. The PCA of Normalized Data seems to conclude that gyroscope data works. Since I'd like to eventually move this project over to the esp32, less data processing will reduce processing overhead on the micro. So lets try just using the **raw acceleration data** first. If that doesn't work, I'll add in the raw gyroscope data. If none of those work well, I'll normalize the data. 
 
@@ -69,18 +71,18 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 
 
 
-# Model Building
+# Model Building:
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
 
 
 
-# Raspberry Pi Deployment
+# Raspberry Pi Deployment:
 I used a raspberry pi 4 for my deployment. It was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. I'll eventually phase it out for the ESP32 and TinyML once that model is solid. 
 
-# Conclusions
+# Conclusions:
 
 
-# Future Work
+# Future Work:
     -shrink data capture window from 3secs to 1.5 ~ 2secs
     -Test if gyro data improves continuous snapshot mode
     -Deploy on ESP32 with TinyML/TensorflowLite
