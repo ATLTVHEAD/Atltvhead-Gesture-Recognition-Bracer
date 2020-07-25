@@ -29,7 +29,17 @@ A working gesture detection model using TensorFlow and sensor data.
 
 ![My Flow](/Jypter_Scripts/images/Machine_Learning_Flow_Chart-02.png)
 
-# Arduino Setup:
+# Sensors and Arduino Setup:
+To briefly explain my sensor choices. 
+
+**Lidar:** I've used "lidar" Time of flight sensors to detect high fives, in the previous version of my wearable. However, it cannot detect arm gestures without complex mounting a ton of them all over one arm. 
+
+**Stain Sensor:** Using the change in resistance stretch rubbers I can get a sense of what muscles I'm actuating or general shape of my arm. However, they are easily damaged and wear with use. 
+
+**Muscle Sensors:** Something like an MYO armband can determine hand gestures, but require a lot of processing overhead for my use case. They are also quite expensive. 
+
+**IMU:** Acceleration and gyroscope sensors are cheap and do not wear out over time. However, determining a gesture from the data output of the sensor requires a lot of manual thresholding and timing to determine anything useful. Luckily machine learning can determine relationships in the data and even can be implemented on a microcontroller with tflite and TinyML. So I chose to go forward with an IMU sensor and Machine Learning. 
+
 The AGRB-Traning-Data-Capture.ino in the Arduino_Sketch folder is my Arduino script to pipe acceleration and gyroscope data from an Adafruit LSM6DSOX 9dof IMU out of the USB serial port. An esp32 Thingplus by SparkFun is the board I've chosen due to the Qwiic connector support between this board and the Adafruit IMU. A push-button is connected between ground and pin 33 with the internal pullup resistor on. Eventually, I plan to deploy a tflite model on the esp32, so I've included a battery.
 
 ![ESP32 Layout](/Arduino_Sketch/images/Esp32_layout.png)
