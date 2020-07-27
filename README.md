@@ -61,7 +61,7 @@ As said in the TLDR, the DataPipeline.py script, found in the Python_Scripts fol
 
 ## The following conclusions and findings are found in Jypter_Scripts/Data_Exploration.ipynb file:
 
-- The first exploration task I conducted was to use seaborn's pair plot to plot all variables against one another for each different type of gesture. I was looking to see if there was any noticeable outright linear or logistic relationships between variables. None popped out to me. 
+- The first exploration task I conducted was to use seaborn's pair plot to plot all variables against one another for each different type of gesture. I was looking to see if there was any noticeable outright linear or logistic relationships between variables. For the fist pump data there seem to be some possible linear effects between the Y and Z axis, but not enough to make me feel confident in them. 
 ![Fist Pump Pairplot](/Jypter_Scripts/images/fist_pump_pairplot.png)
 
 - Looking at the descriptions, I noticed that each gesture sampling had a different number of points, and are not consistent between samples of the same gesture.
@@ -93,10 +93,10 @@ Before Augmenting I had 168 samples in my training set, 23 in my test set, and 3
 # Model Building and Selection:
 As said in the TLDR, the ModelPipeline.py script, found in the Python_Scripts folder, will import all finalized data from the finalized CSVs, create 2 different models an LSTM and CNN, compare the models' performances, and save all models. Note the LSTM will not have a size optimized tflite model. 
 
-For which model to use, I looked towards my predecessors' works. They used Scikit-learn's SDG Classifier, a CNN, and an LSTM. Since I want to eventually deploy on the esp32 with TinyML, I Scikit learn is out. 2D CNN's and LSTM's are both valid options for deployment, so let's define the two models. 
+For which model to use, I looked towards my predecessors' works. They used Scikit-learn's SDG Classifier, a CNN, and an LSTM. Since I want to eventually deploy on the esp32 with TinyML, I Scikit learn is out. 2D CNN's and LSTM's are both valid options for deployment. But why did the preexisting work choose these models? We are dealing with time-series data, each data point in a sample is not independent of one another. Since RNN's and LSTM's assume there are relationships between data points and take sequencing into account, they are a good choice for modeling our data. A 2D CNN can also extract features from a time series, however, it needs to be presented with the entire time sequence of data because it does not take the sequencing of data into account. 
 
 **CNN** 
-I made a 10 layer CNN. The first layer being a 2D convolution layer, going into a maxpool, dropout, another 2D convolution, another maxpool, another dropout, a flattening, a dense, a final dropout, and a dense output layer for the 4 gestures. 
+I made a 10 layer CNN. The first layer being a 2D convolution layer, going into a maxpool, dropout, another 2D convolution, another maxpool, another dropout, a flattening, a dense, a final dropout, and a dense output layer for the 4 gestures. See ![code](/Python_Scripts/ModelPipeline.py) for mode details.
 
 After tuning hyperparameters, I ended up with a batch size of 192, 300 steps per epoch, and 20 epochs. I optimized with an adam optimizer and used sparse categorical cross-entropy for my loss, having accuracy as the metric to measure. 
 
@@ -110,6 +110,10 @@ Both the CNN and LSTM perfectly predicted the gestures of the training set. The 
 
 Next, I looked at the Training Validation loss per epoch of training. From the look of it, the CNN with a batch size of 192 is pretty close to being fit correctly. The CNN batch size of 64 and the LSTM both seem a little overfit.
 ![Training Validation Loss](/Jypter_Scripts/images/Model_Losses.png)
+
+I also looked at the size of the model. The h5 filesize of the LSTM is 97KB and the size of the CNN is 308KB. However, when comparing their tflite models, the CNN came in at 91KB and the LSTM grew to 119KB. On top of that, the quantized tflite CNN shrank to 28KB. I was unable to quantize the LSTM for size, so the CNN seems to be the winner. One last comparison when converting the tflite model to C++ for use on my microcontroller revealed that both models increased in size. The CNN 167KB and the LSTM to 729KB. 
+
+**EDIT** After some more hyperparameter tweaking (cnn_model3), I shrank the CNN optimized model. The C++ implementation of this model is down to 69KB and the tflight implementation is down to 12KB. The Loss 0.015218148939311504, Accuracy 1.0 for model 3.
 
 So I chose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size.
 
