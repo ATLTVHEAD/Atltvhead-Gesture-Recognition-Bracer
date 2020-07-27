@@ -35,7 +35,7 @@ def makeModels(modelType,samples):
         model = tf.keras.Sequential([
             tf.keras.layers.Bidirectional(
                 tf.keras.layers.LSTM(22),
-                input_shape=(samples, 3)),  # output_shape=(batch, 44)
+                input_shape=(samples, 3)),  # output_shape=(batch, 253)
             tf.keras.layers.Dense(4, activation="sigmoid")  # (batch, 4)
         ])
 
@@ -43,13 +43,13 @@ def makeModels(modelType,samples):
     elif modelType == 'cnn':
         model = tf.keras.Sequential([
             tf.keras.layers.Conv2D(8, (4, 3),padding="same",activation="relu",
-                                input_shape=(samples, 3, 1)),  # output_shape=(batch, 128, 3, 8)
-            tf.keras.layers.MaxPool2D((3, 3)),  # (batch, 42, 1, 8)
-            tf.keras.layers.Dropout(0.1),  # (batch, 42, 1, 8)
-            tf.keras.layers.Conv2D(16, (4, 1), padding="same",activation="relu"),  # (batch, 42, 1, 16)
-            tf.keras.layers.MaxPool2D((3, 1), padding="same"),  # (batch, 14, 1, 16)
-            tf.keras.layers.Dropout(0.1),  # (batch, 14, 1, 16)
-            tf.keras.layers.Flatten(),  # (batch, 224)
+                                input_shape=(samples, 3, 1)),  # output_shape=(batch, 760, 3, 8)
+            tf.keras.layers.MaxPool2D((3, 3)),  # (batch, 253, 1, 8)
+            tf.keras.layers.Dropout(0.1),  # (batch, 253, 1, 8)
+            tf.keras.layers.Conv2D(16, (4, 1), padding="same",activation="relu"),  # (batch, 253, 1, 16)
+            tf.keras.layers.MaxPool2D((3, 1), padding="same"),  # (batch, 84, 1, 16)
+            tf.keras.layers.Dropout(0.1),  # (batch, 84, 1, 16)
+            tf.keras.layers.Flatten(),  # (batch, 1344)
             tf.keras.layers.Dense(16, activation="relu"),  # (batch, 16)
             tf.keras.layers.Dropout(0.1),  # (batch, 16)
             tf.keras.layers.Dense(4, activation="softmax")  # (batch, 4)
