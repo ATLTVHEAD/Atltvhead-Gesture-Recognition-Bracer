@@ -4,7 +4,7 @@
 This repository is my spin on Jennifer Wang's and Google Tensorflow's magic wand project, but for arm gestures
 
 # TLDR:
-1) Get started by uploading the AGRB-Traning-Data-Capture.ino in the Arduino_Sketch folder onto an Arduino of your choice with a button and Adafruit LSM6DSOX 9dof IMU. 
+1) Get started by uploading the ![AGRB-Traning-Data-Capture.ino](/Arduino_Sketch/AGRB-Traning-Data-Capture/AGRB-Traning-Data-Capture.ino) in the Arduino_Sketch folder onto an Arduino of your choice with a button and Adafruit LSM6DSOX 9dof IMU. 
 2) Use the ![CaptureData.py](/Training_Data/CaptureData.py) in the Training_Data folder. Initiate this script, type in the gesture name, start recording the motion data by pressing the button on the Arduino
 3) After several gestures were recorded change to a different gesture and do it again. I tried to get 50 motion recordings of each gesture, you can try less if you like. 
 4) Once all the data is collected, navigate to the Python Scripts folder and run ![DataPipeline.py](/Python_Scripts/DataPipeline.py) and ![ModelPipeline.py](/Python_Scripts/ModelPipeline.py) in that order. Models are trained here and can time some time. 
