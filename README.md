@@ -120,7 +120,7 @@ I also looked at the size of the model. The h5 filesize of the LSTM is 97KB and 
 So I chose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size in the model folder.
 
 # Testing 
-I wrote a gesture prediction test script for both the regular model and the tflight model. Both models work!
+I wrote a gesture prediction test script for both the ![h5 model](/Python_Scripts/Predict_Gesture.py) and the ![tflight model](/Python_Scripts/Test_TFLite_Inference_Serial_Input.py).
 
 # Raspberry Pi Deployment:
 I used a raspberry pi 4 for my current deployment since it was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. 
