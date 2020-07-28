@@ -111,7 +111,8 @@ Both the CNN and LSTM perfectly predicted the gestures of the training set. The 
 Next, I looked at the Training Validation loss per epoch of training. From the look of it, the CNN with a batch size of 192 is pretty close to being fit correctly. The CNN batch size of 64 and the LSTM both seem a little overfit.
 ![Training Validation Loss](/Jypter_Scripts/images/LSTM_VS_CNN_LOSS.png)
 ![Training Validation Accuracy](/Jypter_Scripts/images/LSTM_VS_CNN_ACC.png)
-![Test Confusion Matrix](/Jypter_Scripts/images/LSTM_VS_CNN.png)
+
+![Test Confusion Matrix](/Jypter_Scripts/images/LSTM_VS_CNN.PNG)
 
 I also looked at the size of the model. The h5 filesize of the LSTM is 97KB and the size of the CNN is 308KB. However, when comparing their tflite models, the CNN came in at 91KB and the LSTM grew to 119KB. On top of that, the quantized tflite CNN shrank to 28KB. I was unable to quantize the LSTM for size, so the CNN seems to be the winner. One last comparison when converting the tflite model to C++ for use on my microcontroller revealed that both models increased in size. The CNN 167KB and the LSTM to 729KB. 
 
