@@ -123,7 +123,7 @@ So I chose to proceed with the CNN model, trained with a batch size of 192. I sa
 I wrote a gesture prediction test script for both the ![h5 model](/Python_Scripts/Predict_Gesture.py) and the ![tflight model](/Python_Scripts/Test_TFLite_Inference_Serial_Input.py).
 
 # Raspberry Pi Deployment:
-I used a raspberry pi 4 for my current deployment since it was already in a previous tvhead build, has the compute power for model inference, and can be powered by a battery. 
+I used a raspberry pi 4 for my current deployment since it was already in a previous tvhead build, has the compute power gfor model inference, and can be powered by a battery. 
 
 The pi is in a backpack with a display. On the display is a positive message that changes based on what is said in my Twitch chat, during live streams. I used this same script but added the TensorFlow model gesture prediction components from the Predict_Gesture_Twitch.py script to create the PositivityPack.py script. 
 
