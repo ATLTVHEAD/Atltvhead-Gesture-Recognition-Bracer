@@ -5,10 +5,10 @@ This repository is my spin on Jennifer Wang's and Google Tensorflow's magic wand
 
 # TLDR:
 1) Get started by uploading the AGRB-Traning-Data-Capture.ino in the Arduino_Sketch folder onto an Arduino of your choice with a button and Adafruit LSM6DSOX 9dof IMU. 
-2) Use the CaptureData.py in the Training_Data folder. Initiate this file, type in the gesture name, start recording the motion data by pressing the button on the Arduino
+2) Use the ![CaptureData.py](/Training_Data/CaptureData.py) in the Training_Data folder. Initiate this script, type in the gesture name, start recording the motion data by pressing the button on the Arduino
 3) After several gestures were recorded change to a different gesture and do it again. I tried to get 50 motion recordings of each gesture, you can try less if you like. 
-4) Once all the data is collected, navigate to the Python Scripts folder and run DataPipeline.py and ModelPipeline.py in that order. Models are trained here and can time some time. 
-5) Run Predict_Gesture.py and press the button on the Arduino to take a motion recording and see the results printed out. 
+4) Once all the data is collected, navigate to the Python Scripts folder and run ![DataPipeline.py](/Python_Scripts/DataPipeline.py) and ![ModelPipeline.py](/Python_Scripts/ModelPipeline.py) in that order. Models are trained here and can time some time. 
+5) Run ![Predict_Gesture.py](/Python_Scripts/Predict_Gesture.py) and press the button on the Arduino to take a motion recording and see the results printed out. 
 
 # Problem:
 I run an interactive live stream. I wear an old tv (with working led display) like a helmet and backpack with a display. Twitch chat controls what's displayed on the television screen and the backpack screen through chat commands. Together Twitch chat and I go through the city of Atlanta, Ga spreading cheer. 
@@ -109,13 +109,15 @@ After tuning hyperparameters, I ended up with a batch size of 64, 200 steps per 
 Both the CNN and LSTM perfectly predicted the gestures of the training set. The LSTM with a loss of 0.04 and the CNN with a loss of 0.007 during the test. 
 
 Next, I looked at the Training Validation loss per epoch of training. From the look of it, the CNN with a batch size of 192 is pretty close to being fit correctly. The CNN batch size of 64 and the LSTM both seem a little overfit.
-![Training Validation Loss](/Jypter_Scripts/images/Model_Losses.png)
+![Training Validation Loss](/Jypter_Scripts/images/LSTM_VS_CNN_LOSS.png)
+![Training Validation Accuracy](/Jypter_Scripts/images/LSTM_VS_CNN_ACC.png)
+![Test Confusion Matrix](/Jypter_Scripts/images/LSTM_VS_CNN.png)
 
 I also looked at the size of the model. The h5 filesize of the LSTM is 97KB and the size of the CNN is 308KB. However, when comparing their tflite models, the CNN came in at 91KB and the LSTM grew to 119KB. On top of that, the quantized tflite CNN shrank to 28KB. I was unable to quantize the LSTM for size, so the CNN seems to be the winner. One last comparison when converting the tflite model to C++ for use on my microcontroller revealed that both models increased in size. The CNN 167KB and the LSTM to 729KB. 
 
 **EDIT** After some more hyperparameter tweaking (cnn_model3), I shrank the CNN optimized model. The C++ implementation of this model is down to 69KB and the tflight implementation is down to 12KB. The Loss 0.015218148939311504, Accuracy 1.0 for model 3.
 
-So I chose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size.
+So I chose to proceed with the CNN model, trained with a batch size of 192. I saved the model, as well as saved a tflite version of the model optimized for size in the model folder.
 
 # Testing 
 I wrote a gesture prediction test script for both the regular model and the tflight model. Both models work!
