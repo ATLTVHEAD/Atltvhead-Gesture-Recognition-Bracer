@@ -36,7 +36,7 @@ To briefly explain my sensor choices.
 
 **Stain Sensor:** Using the change in resistance stretch rubbers I can get a sense of what muscles I'm actuating or general shape of my arm. However, they are easily damaged and wear with use. 
 
-**Muscle Sensors:** Something like an MYO armband can determine hand gestures, but require a lot of processing overhead for my use case. They are also quite expensive. 
+**Muscle Sensors:** Something like an MYO armband can determine hand gestures, but require a lot of processing overhead for my use case. They are also quite expensive and the electrodes not reusable.
 
 **IMU:** Acceleration and gyroscope sensors are cheap and do not wear out over time. However, determining a gesture from the data output of the sensor requires a lot of manual thresholding and timing to determine anything useful. Luckily machine learning can determine relationships in the data and even can be implemented on a microcontroller with tflite and TinyML. So I chose to go forward with an IMU sensor and Machine Learning. 
 
