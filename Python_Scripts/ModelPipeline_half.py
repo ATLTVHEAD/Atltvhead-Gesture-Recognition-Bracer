@@ -123,26 +123,26 @@ def convertToTFlite(model, modelName):
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
     tflite_model = converter.convert()
     # Save the model to disk
-    open(modelName+'.tflite', "wb").write(tflite_model)
+    open('../Model/'+ modelName +'_half.tflite', "wb").write(tflite_model)
     # Optimize model for size
     converter = tf.lite.TFLiteConverter.from_keras_model(model)
     converter.optimizations = [tf.lite.Optimize.OPTIMIZE_FOR_SIZE]
     opt_tflite_model = converter.convert()
     # Save the model to disk
-    open(modelName+'_optimized.tflite', "wb").write(opt_tflite_model)
+    open('../Model/' + modelName + '_optimized_half.tflite', "wb").write(opt_tflite_model)
 
-    basic_model_size = os.path.getsize(modelName+'.tflite')
+    basic_model_size = os.path.getsize('../Model/' + modelName + '_half.tflite')
     print("Basic model is %d bytes" % basic_model_size)
-    quantized_model_size = os.path.getsize(modelName+'_optimized.tflite')
+    quantized_model_size = os.path.getsize('../Model/' + modelName + '_optimized_half.tflite')
     print("Quantized model is %d bytes" % quantized_model_size)
     difference = basic_model_size - quantized_model_size
     print("Difference is %d bytes" % difference)
 
 if __name__=='__main__':
     #load in data sets
-    trainingData = pd.read_csv('processed_train_set.csv',converters={'acceleration': eval})
-    testingData = pd.read_csv('processed_test_set.csv',converters={'acceleration': eval})
-    validationData = pd.read_csv('processed_val_set.csv',converters={'acceleration': eval})
+    trainingData = pd.read_csv('../Training_Data/processed_train_set_half.csv',converters={'acceleration': eval})
+    testingData = pd.read_csv('../Training_Data/processed_test_set_half.csv',converters={'acceleration': eval})
+    validationData = pd.read_csv('../Training_Data/processed_val_set_half.csv',converters={'acceleration': eval})
 
     #Lets make the models
     sample_len = len(trainingData['acceleration'][0])
@@ -185,8 +185,8 @@ if __name__=='__main__':
     print(confusion_cnn)
     print("Loss {}, Accuracy {}".format(loss_cnn, acc_cnn))
 
-    lstm_model.save('lstm_model.h5') 
-    cnn_model.save('cnn_model.h5')
+    lstm_model.save('../Model/lstm_model_half.h5') 
+    cnn_model.save('../Model/cnn_model_half.h5')
 
     convertToTFlite(cnn_model, 'cnn_model')
     try:
