@@ -41,7 +41,7 @@ int startTime = 0;
 int currTime = 0;
 
 int id = 0;
-uint8_t datapoints = 380;
+int datapoints = 380;
 
 // For SPI mode, we need a CS pin
 #define LSM_CS 10
@@ -102,7 +102,8 @@ void loop() {
     //Serial.print("start");
   }
   else if (lpress){
-    if(currTime-startTime >= 1700 && id >= datapoints){
+    if(currTime-startTime >= 1700 && id >= datapoints-1){
+      delay(375);
       startTime = currTime;
       id = 0;
     }
