@@ -16,6 +16,9 @@ processed_test_set.csv
 processed_val_set.csv
 train_set.csv
 val_set.csv
+processed_train_set_half.csv
+processed_test_set_half.csv
+processed_val_set_half.csv
 
 #Ignore config file
 cfg.py
