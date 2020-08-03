@@ -102,14 +102,15 @@ void loop() {
     //Serial.print("start");
   }
   else if (lpress){
-    if(currTime-startTime >= 1700 && id >= datapoints){
+    if(id >= datapoints){
+      //Serial.print(id);
       delay(375);
       startTime = currTime;
       id = 0;
     }
   }
 
-  if(currTime-startTime <= 1700 && id < datapoints){
+  if(currTime-startTime <= 2000 && id < datapoints){
     //Serial.print(id);
     //Serial.print(',');
     Serial.print(currTime - startTime);
