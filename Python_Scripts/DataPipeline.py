@@ -176,6 +176,9 @@ if __name__=='__main__':
     print('len of validationData random_motion: '+ str(len(validationData.query('gesture == "random_motion"'))))
     print('len of testingData random_motion: '+ str(len(testingData.query('gesture == "random_motion"'))))
 
+    trainingData = pd.read_csv('train_set.csv',converters={'acceleration': eval})
+    validationData = pd.read_csv('val_set.csv',converters={'acceleration': eval})
+    testingData = pd.read_csv('test_set.csv',converters={'acceleration': eval})
 
     #Data Augmenting
     training_accelerations = trainingData['acceleration'].to_numpy()
