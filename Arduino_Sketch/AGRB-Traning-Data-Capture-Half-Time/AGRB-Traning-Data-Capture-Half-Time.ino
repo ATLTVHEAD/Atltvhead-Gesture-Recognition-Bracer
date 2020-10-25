@@ -4,7 +4,7 @@ Description: Upon button press, send 3 seconds of data reads over serial. Long P
 
 Written by Nate Damen  
 Created: Aug 1,2020
-
+Updated: Oct 24th, 2020
 
 */
 
